@@ -6,56 +6,21 @@ import TaskCtr from "./containers/task.ctr";
 
 import TaskError from "./components/Tasks/error";
 import TaskLoading from "./components/Tasks/loading";
+import useFilter from "./hooks/useFilter";
 
 const App = () => {
-  const [filteredTasks, setFilteredTasks] = useState([]);
-  const [filter, setFilter] = useState("all");
-  const [sorting, setSorting] = useState("none");
-  const [search, setSearch] = useState("");
+  const [data, setData] = useState([]);
 
   const { error, loading, tasks } = useTasks();
-
-  const handleChangeFilter = (e) => setFilter(e.target.value);
-
-  const handleChangeSearch = (e) => setSearch(e.target.value);
-
-  const handleChangeSorting = (e) => setSorting(e.target.value);
-
-  useEffect(() => {
-    let filtered = [...tasks];
-    if (sorting !== "none") {
-      filtered = tasks.sort((a, b) => {
-        const nameA = `${a[sorting]}`.toUpperCase(); // ignore upper and lowercase
-        const nameB = `${b[sorting]}`.toUpperCase(); // ignore upper and lowercase
-        if (nameA < nameB) {
-          return -1;
-        }
-        if (nameA > nameB) {
-          return 1;
-        }
-
-        // names must be equal
-        return 0;
-      });
-    } else {
-      debugger;
-      filtered = [...tasks];
-    }
-
-    if (filter === "completed") {
-      filtered = tasks.filter((task) => task.completed);
-    } else if (filter === "pending") {
-      filtered = tasks.filter((task) => !task.completed);
-    }
-
-    if (search) {
-      filtered = filtered.filter((task) =>
-        task.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    setFilteredTasks(filtered);
-  }, [filter, search, tasks, sorting]);
+  const {
+    filter,
+    search,
+    sorting,
+    onChangeFilter,
+    onChangeSearch,
+    onChangeSorting,
+  } = useFilter({ tasks, setData });
+  
 
   if (loading) return <TaskLoading />;
   if (error) return <TaskError error={error} />;
@@ -67,11 +32,11 @@ const App = () => {
         filter={filter}
         search={search}
         sorting={sorting}
-        onChangeFilter={handleChangeFilter}
-        onChangeSearch={handleChangeSearch}
-        onChangeSorting={handleChangeSorting}
+        onChangeFilter={onChangeFilter}
+        onChangeSearch={onChangeSearch}
+        onChangeSorting={onChangeSorting}
       />
-      <TaskCtr data={filteredTasks} />
+      <TaskCtr data={data} />
     </div>
   );
 };
