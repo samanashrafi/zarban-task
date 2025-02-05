@@ -13,7 +13,7 @@ const Input = ({
       <input
         type={type}
         placeholder={placeholder}
-        value={search}
+        value={value}
         onChange={onChange}
         {...props}
       />
