@@ -1,19 +1,29 @@
-import React from "react";
-
+import { ChangeEvent } from "react";
 import Input from "../components/dataEntry/input";
 import Select from "../components/dataEntry/select";
 import { FILTER_OPTIONS, SORTING_OPTIONS } from "../helpers/enum";
 
+type Props = {
+  className?: string;
+  filter?: string | undefined;
+  search?: string | undefined;
+  sorting?: string | undefined;
+  onChangeFilter?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChangeSearch?: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChangeSorting?: (e: ChangeEvent<HTMLInputElement>) => void;
+};
+
 const FilterCTR = ({
+  className = "filter-side",
   filter,
   search,
   sorting,
   onChangeFilter,
   onChangeSearch,
   onChangeSorting,
-}) => {
+}: Props) => {
   return (
-    <div>
+    <div className={className}>
       <Input
         type="text"
         placeholder="Search tasks..."
@@ -22,14 +32,14 @@ const FilterCTR = ({
       />
       <Select
         value={filter}
-        onChange={onChangeFilter}
         options={FILTER_OPTIONS}
+        onChange={onChangeFilter}
       />
 
       <Select
         value={sorting}
-        onChange={onChangeSorting}
         options={SORTING_OPTIONS}
+        onChange={onChangeSorting}
       />
     </div>
   );

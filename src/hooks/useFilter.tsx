@@ -1,25 +1,36 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import { IFTask } from "../interfaces/tasks.interface";
+
+type Props = {
+  tasks: IFTask[];
+  filterName?: string;
+  sortingName?: string;
+  setData: (value: any) => void;
+};
 
 const useFilter = ({
   tasks,
   filterName = "all",
   sortingName = "none",
   setData,
-}) => {
+}: Props) => {
   const [filter, setFilter] = useState(filterName);
   const [sorting, setSorting] = useState(sortingName);
   const [search, setSearch] = useState("");
 
-  const onChangeFilter = (e) => setFilter(e.target.value);
+  const onChangeFilter = (e: ChangeEvent<HTMLInputElement>) =>
+    setFilter(e.target.value);
 
-  const onChangeSearch = (e) => setSearch(e.target.value);
+  const onChangeSearch = (e: ChangeEvent<HTMLInputElement>) =>
+    setSearch(e.target.value);
 
-  const onChangeSorting = (e) => setSorting(e.target.value);
+  const onChangeSorting = (e: ChangeEvent<HTMLInputElement>) =>
+    setSorting(e.target.value);
 
   useEffect(() => {
     let filtered = [...tasks];
     if (sorting !== "none") {
-      filtered = tasks.sort((a, b) => {
+      filtered = tasks.sort((a: any, b: any) => {
         const nameA = `${a[sorting]}`.toUpperCase(); // ignore upper and lowercase
         const nameB = `${b[sorting]}`.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
